@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/ll_available_dice"
+    android:background="#EEEEEE"
+    android:padding="20dp">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/iv_popup_d4"
+            android:clickable="true"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:src="@drawable/d4"/>
+        <TextView
+            android:id="@+id/tv_popup_d4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="D4" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/iv_popup_d6"
+            android:clickable="true"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:src="@drawable/d6"/>
+        <TextView
+            android:id="@+id/tv_popup_d6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="D6" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/iv_popup_d8"
+            android:clickable="true"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:src="@drawable/d8"/>
+        <TextView
+            android:id="@+id/tv_popup_d8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="D8" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/iv_popup_d10"
+            android:clickable="true"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:src="@drawable/d10"/>
+        <TextView
+            android:id="@+id/tv_popup_d10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="D10" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/iv_popup_d12"
+            android:clickable="true"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:src="@drawable/d12"/>
+        <TextView
+            android:id="@+id/tv_popup_d12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="D12" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/iv_popup_d20"
+            android:clickable="true"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:src="@drawable/d20"/>
+        <TextView
+            android:id="@+id/tv_popup_d20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="D20" />
+    </LinearLayout>
+</LinearLayout>

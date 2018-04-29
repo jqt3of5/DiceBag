@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="org.jqt3of5.android.dicebag.MainActivity"
+    tools:showIn="@layout/activity_main"
+    android:padding="10dp"
+    >
+
+    <GridView android:id="@+id/main_dice_grid"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:verticalSpacing="10dp"
+        android:horizontalSpacing="10dp"
+        android:gravity="center"
+        android:stretchMode="columnWidth"
+        android:numColumns="3"/>
+
+</FrameLayout>

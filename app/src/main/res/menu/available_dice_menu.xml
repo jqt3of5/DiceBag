@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/d4"
+        android:icon="@drawable/d4"
+        android:title="D4"/>
+
+    <item android:id="@+id/d6"
+        android:icon="@drawable/d6"
+        android:title="D6"/>
+
+    <item android:id="@+id/d8"
+        android:icon="@drawable/d8"
+        android:title="D8"/>
+
+    <item android:id="@+id/d10"
+        android:icon="@drawable/d10"
+        android:title="D10"/>
+
+    <item android:id="@+id/d12"
+        android:icon="@drawable/d12"
+        android:title="D12"/>
+
+    <item android:id="@+id/d20"
+        android:icon="@drawable/d20"
+        android:title="D20"/>
+</menu>
