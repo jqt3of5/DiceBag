@@ -1,5 +1,6 @@
 package org.jqt3of5.android.dicebag
 
+import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Delete
 import android.arch.persistence.room.Insert
@@ -11,11 +12,11 @@ import android.arch.persistence.room.Query
 @Dao
 interface DiceInPlayDao
 {
-    @Query("SELECT * FROM DiceInPlay")
-    fun getAll() : List<DiceTemplateEntity>
+    @Query("SELECT * FROM DiceInPlay NATURAL JOIN DiceTemplates")
+    fun getAll() : LiveData<List<Dice>>
 
-    @Query("SELECT * FROM DiceInPlay WHERE diceId IN (:diceIds)")
-    fun loadAllByIds(diceIds : Array<Int>) : List<DiceTemplateEntity>
+    @Query("SELECT * FROM DiceInPlay NATURAL JOIN DiceTemplates WHERE diceId = :diceId")
+    fun getById(diceId : Int) : LiveData<Dice>
 
     @Insert
     fun insertAll(dice : Array<DiceInPlayEntity>)

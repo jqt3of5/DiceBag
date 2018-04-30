@@ -1,5 +1,9 @@
 package org.jqt3of5.android.dicebag;
 
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
+import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -26,7 +30,7 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
-    DiceDataSource mDiceDataSource;
+    DiceDatabase mDB;
     GridView mMainDiceGrid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,27 +39,28 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DiceDbHelper dbHelper = new DiceDbHelper(this);
-        ArrayList<DiceItem> diceInPlay = dbHelper.getAllDiceInPlay();
+        mDB = Room.databaseBuilder(getApplicationContext(), DiceDatabase.class, "db.sqlite").build();
 
-        mDiceDataSource = new DiceDataSource(diceInPlay);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDiceDataSource.rollAllDice();
+                //Add Dice
                 mMainDiceGrid.invalidateViews();
             }
         });
 
         mMainDiceGrid = (GridView)findViewById(R.id.main_dice_grid);
-        DiceAdapter diceAdapter = new DiceAdapter(this, mDiceDataSource);
+
+        DiceViewModel vm = ViewModelProviders.of(this).get(DiceViewModel.class);
+        DiceAdapter diceAdapter = new DiceAdapter(this, vm);
+
         mMainDiceGrid.setAdapter(diceAdapter);
         mMainDiceGrid.setLongClickable(true);
         mMainDiceGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                mDiceDataSource.rollDiceAtIndex(i);
+                //Roll dice
                 mMainDiceGrid.invalidateViews();
             }
         });
@@ -93,9 +98,7 @@ public class MainActivity extends AppCompatActivity {
                 menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                                                @Override
                                                public boolean onMenuItemClick(MenuItem item) {
-                                                   int id = item.getItemId();
-                                                   DiceItem.StandardDiceEnum dice = DiceItem.StandardDiceEnum.values()[id];
-                                                   mDiceDataSource.add(DefaultDiceBuilder.createStandardDice(dice));
+
                                                    mMainDiceGrid.invalidateViews();
                                                    return true;
                                                }

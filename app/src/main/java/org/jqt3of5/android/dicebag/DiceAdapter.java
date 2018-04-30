@@ -22,26 +22,26 @@ import java.util.ArrayList;
 public class DiceAdapter extends BaseAdapter {
 
     private Context mContext;
-    private DiceDataSource mDataSource;
+    private DiceViewModel mViewModel;
 
-    public DiceAdapter(Context c, DiceDataSource dataSource)
+    public DiceAdapter(Context c, DiceViewModel viewModel)
     {
         mContext = c;
-        mDataSource = dataSource;
+        mViewModel = viewModel;
     }
     @Override
     public int getCount() {
-        return mDataSource.size();
+        return mViewModel.getDice().getValue().size();
     }
 
     @Override
     public Object getItem(int i) {
-        return null;
+        return mViewModel.getDice().getValue().get(i);
     }
 
     @Override
     public long getItemId(int i) {
-        return 0;
+        return mViewModel.getDice().getValue().get(i).getDice().getDiceId();
     }
 
     @Override
@@ -54,26 +54,27 @@ public class DiceAdapter extends BaseAdapter {
         TextView textViewTitle = (TextView)view.findViewById(R.id.tv_dice_title);
         TextView textViewValue = (TextView)view.findViewById(R.id.tv_dice_number);
 
-        DiceItem die = mDataSource.get(i);
+        DiceInPlayEntity dice = mViewModel.getDice().getValue().get(i).getDice();
+        DiceTemplateEntity template = mViewModel.getDice().getValue().get(i).getTemplate();
 
-        if (!die.mTitle.isEmpty() || !die.mName.isEmpty())
+        if (!dice.getDescription().isEmpty() || !template.getName().isEmpty())
         {
             textViewTitle.setVisibility(View.VISIBLE);
         }
 
-        if (!die.mTitle.isEmpty() && !die.mName.isEmpty()) {
-            textViewTitle.setText(die.mTitle + "-" + die.mName);
+        if (!dice.getDescription().isEmpty() && !template.getName().isEmpty()) {
+            textViewTitle.setText(dice.getDescription() + "-" + template.getName());
         }
-        else if (!die.mName.isEmpty())
+        else if (!dice.getDescription().isEmpty())
         {
-            textViewTitle.setText(die.mName);
+            textViewTitle.setText(dice.getDescription());
         }
-        else if (!die.mTitle.isEmpty())
+        else if (!template.getName().isEmpty())
         {
-            textViewTitle.setText(die.mTitle);
+            textViewTitle.setText(template.getName());
         }
 
-        textViewValue.setText(die.mCurrentValue);
+        textViewValue.setText(dice.getValue());
         return view;
     }
 
