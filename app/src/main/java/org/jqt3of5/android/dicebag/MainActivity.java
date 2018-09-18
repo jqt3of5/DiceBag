@@ -25,12 +25,16 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
+import org.jqt3of5.android.dicebag.room.DiceDatabase;
+import org.jqt3of5.android.dicebag.room.DiceTemplateEntity;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    DiceDatabase mDB;
+
     GridView mMainDiceGrid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +43,24 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mDB = Room.databaseBuilder(getApplicationContext(), DiceDatabase.class, "db.sqlite").build();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Add Dice
+                List<DiceTemplateEntity> templates = mDB.getDiceTemplates().getAll();
+                PopupMenu popup = new AddDicePopupMenu(MainActivity.this, fab, templates);
+                popup.getMenuInflater().inflate(R.menu.available_dice_menu, popup.getMenu());
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        Toast.makeText(MainActivity.this, "This is a toast", Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+                });
+
                 mMainDiceGrid.invalidateViews();
             }
         });
@@ -94,7 +109,8 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_settings:
                 return true;
             case R.id.add_dice:
-                PopupMenu menu = new AddDicePopupMenu(this, findViewById(R.id.add_dice));
+                List<DiceTemplateEntity> templates = mDB.getDiceTemplates().getAll();
+                PopupMenu menu = new AddDicePopupMenu(this, findViewById(R.id.add_dice), templates);
                 menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                                                @Override
                                                public boolean onMenuItemClick(MenuItem item) {

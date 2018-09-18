@@ -11,6 +11,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.jqt3of5.android.dicebag.room.FullDice;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class DiceAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int i) {
-        return mViewModel.getDice().getValue().get(i).getDice().getDiceId();
+        return mViewModel.getDice().getValue().get(i).dice.diceId;
     }
 
     @Override
@@ -54,27 +55,33 @@ public class DiceAdapter extends BaseAdapter {
         TextView textViewTitle = (TextView)view.findViewById(R.id.tv_dice_title);
         TextView textViewValue = (TextView)view.findViewById(R.id.tv_dice_number);
 
-        DiceInPlayEntity dice = mViewModel.getDice().getValue().get(i).getDice();
-        DiceTemplateEntity template = mViewModel.getDice().getValue().get(i).getTemplate();
+        FullDice dice = mViewModel.getDice().getValue().get(i);
 
-        if (!dice.getDescription().isEmpty() || !template.getName().isEmpty())
+        String description = dice.dice.description;
+        String templateName = dice.template.name;
+
+        if (!description.isEmpty() || !templateName.isEmpty())
         {
             textViewTitle.setVisibility(View.VISIBLE);
         }
 
-        if (!dice.getDescription().isEmpty() && !template.getName().isEmpty()) {
-            textViewTitle.setText(dice.getDescription() + "-" + template.getName());
-        }
-        else if (!dice.getDescription().isEmpty())
+        String title = "";
+        if (!description.isEmpty())
         {
-            textViewTitle.setText(dice.getDescription());
-        }
-        else if (!template.getName().isEmpty())
-        {
-            textViewTitle.setText(template.getName());
+            title = description;
         }
 
-        textViewValue.setText(dice.getValue());
+        if (!description.isEmpty() && !templateName.isEmpty())
+        {
+            title += "-";
+        }
+
+        if (!templateName.isEmpty())
+        {
+            title += templateName;
+        }
+
+        textViewValue.setText(title);
         return view;
     }
 

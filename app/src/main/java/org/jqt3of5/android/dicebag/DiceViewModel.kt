@@ -1,36 +1,40 @@
 package org.jqt3of5.android.dicebag
 
+import android.app.Application
+import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.arch.persistence.room.Room
+import org.jqt3of5.android.dicebag.room.*
 
 /**
  * Created by Brittany on 4/29/2018.
  */
 
-class DiceViewModel : ViewModel
+class DiceViewModel : AndroidViewModel
 {
-    lateinit private var mDiceDao : DiceInPlayDao
-    lateinit private var diceData : LiveData<List<Dice>>
+    private var database : DiceDatabase
+    private lateinit var diceData : LiveData<List<FullDice>>
 
-    constructor(diceDao: DiceInPlayDao) : super()
+    public constructor(application : Application) : super(application)
     {
-        mDiceDao = diceDao
+        database = Room.databaseBuilder<DiceDatabase>(application.applicationContext, DiceDatabase::class.java, "db.sqlite").build()
     }
 
-    public fun getDice() : LiveData<List<Dice>>
+    fun getDice() : LiveData<List<FullDice>>
     {
         if (diceData == null)
         {
-            diceData = mDiceDao.getAll()
+            diceData = database.diceInPlay.allDiceInPlay
         }
 
         return diceData
     }
 
-    public fun getDice(id : Int) : Dice?
+    fun getDice(id : Int) : FullDice
     {
-        return mDiceDao.getById(id).value
+        return database.diceInPlay.getById(id)
     }
 
 }
