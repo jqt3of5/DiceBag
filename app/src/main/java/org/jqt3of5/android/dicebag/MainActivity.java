@@ -26,7 +26,6 @@ import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import org.jqt3of5.android.dicebag.room.DiceDatabase;
-import org.jqt3of5.android.dicebag.room.DiceTemplateEntity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
