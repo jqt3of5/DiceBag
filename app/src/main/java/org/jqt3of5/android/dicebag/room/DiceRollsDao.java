@@ -15,13 +15,16 @@ import java.util.List;
 public interface DiceRollsDao
 {
     @Query("SELECT * FROM dicebag")
-    List<DiceBagEntity> getDiceBags();
+    LiveData<List<DiceBagEntity>> getDiceBags();
 
-    @Query("SELECT * FROM diceroll WHERE bagid = :bagId")
-    List<DiceRollEntity> getRollsForBag(Long bagId);
+    @Query("SELECT * FROM diceroll WHERE bagid = :bagId AND parentId = null")
+    LiveData<List<DiceRollEntity>> getRollsForBag(Long bagId);
 
     @Query("SELECT * FROM dice WHERE rollId = :rollId")
     List<DiceEntity> getDiceForRoll(Long rollId);
+
+    @Query("SELECT * from diceroll WHERE parentId = :rollId")
+    List<DiceRollEntity> getSubRollForRoll(Long rollId);
 
     @Insert
     void insert(DiceEntity dice);

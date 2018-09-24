@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<DiceTemplateEntity> templates = mDB.getDiceTemplates().getAll();
                 PopupMenu popup = new AddDicePopupMenu(MainActivity.this, fab, templates);
                 popup.getMenuInflater().inflate(R.menu.available_dice_menu, popup.getMenu());
 

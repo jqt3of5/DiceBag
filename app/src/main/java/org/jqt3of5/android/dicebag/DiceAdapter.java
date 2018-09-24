@@ -11,10 +11,12 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.jqt3of5.android.dicebag.data.DiceRoll;
 import org.jqt3of5.android.dicebag.room.FullDice;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Brittany on 7/16/2017.
@@ -23,26 +25,25 @@ import java.util.ArrayList;
 public class DiceAdapter extends BaseAdapter {
 
     private Context mContext;
-    private DiceViewModel mViewModel;
+    private List<DiceRoll> mDiceRolls;
 
-    public DiceAdapter(Context c, DiceViewModel viewModel)
+    public DiceAdapter(Context c)
     {
         mContext = c;
-        mViewModel = viewModel;
     }
     @Override
     public int getCount() {
-        return mViewModel.getDice().getValue().size();
+        return mDiceRolls.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return mViewModel.getDice().getValue().get(i);
+        return mDiceRolls.get(i);
     }
 
     @Override
     public long getItemId(int i) {
-        return mViewModel.getDice().getValue().get(i).dice.diceId;
+        return mDiceRolls.get(i).id
     }
 
     @Override

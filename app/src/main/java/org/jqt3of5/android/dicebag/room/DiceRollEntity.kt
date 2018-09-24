@@ -13,4 +13,6 @@ class DiceRollEntity (var name :String,
 {
     @PrimaryKey (autoGenerate = true)
     val id : Long = 0
+
+    var parentId : Long? = null
 }

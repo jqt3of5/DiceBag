@@ -6,35 +6,30 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.persistence.room.Room
+import org.jqt3of5.android.dicebag.data.DiceRoll
 import org.jqt3of5.android.dicebag.room.*
 
 /**
  * Created by Brittany on 4/29/2018.
  */
 
-class DiceViewModel : AndroidViewModel
+class DiceBagViewModel : AndroidViewModel
 {
     private var database : DiceDatabase
-    private lateinit var diceData : LiveData<List<FullDice>>
+    private lateinit var diceData : LiveData<List<DiceRollEntity>>
 
-    public constructor(application : Application) : super(application)
+    constructor(application : Application) : super(application)
     {
         database = Room.databaseBuilder<DiceDatabase>(application.applicationContext, DiceDatabase::class.java, "db.sqlite").build()
     }
 
-    fun getDice() : LiveData<List<FullDice>>
+    fun getDiceRolls(bagId : Long) : LiveData<List<DiceRollEntity>>
     {
         if (diceData == null)
         {
-            diceData = database.diceInPlay.allDiceInPlay
+            diceData = database.diceRolls().getRollsForBag(bagId)
         }
 
         return diceData
     }
-
-    fun getDice(id : Int) : FullDice
-    {
-        return database.diceInPlay.getById(id)
-    }
-
 }
