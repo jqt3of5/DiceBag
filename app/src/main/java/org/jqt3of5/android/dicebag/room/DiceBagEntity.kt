@@ -6,5 +6,5 @@ import android.arch.persistence.room.PrimaryKey
 @Entity(tableName = "dicebag")
 class DiceBagEntity(var name : String) {
     @PrimaryKey(autoGenerate = true)
-    val id : Long = 0
+    var id : Long = 0
 }

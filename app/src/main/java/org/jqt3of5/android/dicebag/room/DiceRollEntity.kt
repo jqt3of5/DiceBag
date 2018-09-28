@@ -1,18 +1,19 @@
 package org.jqt3of5.android.dicebag.room
 
-import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.ForeignKey
+import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
 
-@Entity(tableName = "DiceRoll")
+@Entity(tableName = "diceroll")
 class DiceRollEntity (var name :String,
-                      var modifier : Int,
-                      @ForeignKey(entity = DiceBagEntity::class, parentColumns = arrayOf("id"), childColumns = arrayOf("bagid"))
-                      val bagid : Long)
+                      var modifier : Int)
 {
     @PrimaryKey (autoGenerate = true)
-    val id : Long = 0
+    var id : Long = 0
+
+    @ForeignKey(entity = DiceBagEntity::class, parentColumns = arrayOf("id"), childColumns = arrayOf("bagid"))
+    var bagid : Long = 0
 
     var parentId : Long? = null
 }
