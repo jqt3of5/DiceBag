@@ -1,24 +1,18 @@
 package org.jqt3of5.android.dicebag.repository
 
+import android.arch.persistence.room.Embedded
+import android.arch.persistence.room.Relation
 import android.support.v7.util.DiffUtil
 import android.support.v7.util.ListUpdateCallback
 import org.jqt3of5.android.dicebag.room.DiceEntity
 import org.jqt3of5.android.dicebag.room.DiceRollEntity
 
-class DiceRoll(val rollEntity : DiceRollEntity, val diceEntities : List<DiceEntity>, val subrolls : List<DiceRoll>)
+class DiceRoll(@Embedded
+               val rollEntity : DiceRollEntity,
+               @Relation(entity = DiceEntity::class, parentColumn = "rollId", entityColumn = "id")
+               val diceEntities : List<DiceEntity>,
+               val subrolls : List<DiceRoll>)
 {
-    val id : Long
-        get() = rollEntity.id
-
-    val parentId : Long?
-        get() = rollEntity.parentId
-
-    val name : String
-        get() = rollEntity.name
-
-    val modifier : Int
-        get () = rollEntity.modifier
-
     var rollValue : Int? = null
 
     fun roll()

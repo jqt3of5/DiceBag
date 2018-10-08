@@ -26,7 +26,7 @@ public interface DiceRollsDao
     List<DiceRollEntity> getSubRollForRoll(Long rollId);
 
     @Query("SELECT * from diceroll WHERE id = :rollId")
-    DiceRollEntity getRollForId(Long rollId);
+    LiveData<DiceRollEntity> getRollForId(Long rollId);
 
     @Query("SELECT * FROM diceroll WHERE bagid = :bagId")
     LiveData<List<DiceRollEntity>> getRollsForBag(Long bagId);

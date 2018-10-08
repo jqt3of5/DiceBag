@@ -56,7 +56,20 @@ class DiceRollRepository {
         {
             updateDiceRoll(subroll)
         }
+    }
 
+    fun getDiceRoll (rollId : Long) : LiveData<DiceRoll>
+    {
+        val rollLiveData = database.diceRolls().getRollForId(rollId)
+        val liveData = MutableLiveData<DiceRoll>()
+
+        return Transformations.switchMap(rollLiveData) {
+
+            GlobalScope.launch {
+                liveData.postValue(createDiceRoll(it))
+            }
+            liveData
+        }
     }
 
     fun getDiceRolls(bagId : Long) : LiveData<List<DiceRoll>>
