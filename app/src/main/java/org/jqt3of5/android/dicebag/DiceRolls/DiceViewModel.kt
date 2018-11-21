@@ -68,6 +68,11 @@ class DiceBagViewModel : AndroidViewModel {
         }
     }
 
+    fun getDiceRollForId(rollId : Long) : LiveData<DiceRoll>
+    {
+        return diceRollRepository.getDiceRollForId(rollId)
+    }
+
     fun getDiceRollValues() : LiveData<Int>
     {
         return diceRollValueLiveData

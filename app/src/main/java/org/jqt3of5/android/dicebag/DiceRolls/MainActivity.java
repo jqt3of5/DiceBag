@@ -15,13 +15,12 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import org.jqt3of5.android.dicebag.DiceRolls.edit.DicePropertiesActivity;
+import org.jqt3of5.android.dicebag.DiceRolls.edit.DicePropertiesFragment;
 import org.jqt3of5.android.dicebag.R;
 import org.jqt3of5.android.dicebag.repository.DiceRoll;
 import org.jqt3of5.android.dicebag.room.DiceEntity;
 import org.jqt3of5.android.dicebag.room.DiceRollEntity;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -81,8 +80,8 @@ public class MainActivity extends AppCompatActivity {
         mMainDiceGrid.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(MainActivity.this, DicePropertiesActivity.class);
-                intent.putExtra(DicePropertiesActivity.ROLL_ID_KEY, ((DiceRoll)diceAdapter.getItem(i)).getRollEntity().getId());
+                Intent intent = new Intent(MainActivity.this, DicePropertiesFragment.class);
+                intent.putExtra(DicePropertiesFragment.ROLL_ID_KEY, ((DiceRoll)diceAdapter.getItem(i)).getRollEntity().getId());
                 startActivity(intent);
                 return false;
             }

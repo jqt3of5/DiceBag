@@ -80,6 +80,12 @@ class DiceRollRepository  {
     {
         return database.diceRolls().getRollsForBag(bagId)
     }
+    fun getDiceRollForId(rollId : Long) : LiveData<DiceRoll>
+    {
+        return database.diceRolls().getRollForId(rollId)
+    }
+
+
 
     fun getDiceBags() : LiveData<List<DiceBagEntity>>
     {

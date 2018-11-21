@@ -19,7 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DiceRolls.edit.DicePropertiesActivity"
+        <activity android:name=".DiceRolls.edit.DicePropertiesFragment"
             android:parentActivityName=".DiceRolls.MainActivity"></activity>
     </application>
 
