@@ -1,18 +1,26 @@
 package org.jqt3of5.android.dicebag.repository
 
 import android.arch.persistence.room.Embedded
+import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.Relation
 import android.support.v7.util.DiffUtil
 import android.support.v7.util.ListUpdateCallback
+import org.jqt3of5.android.dicebag.room.DiceBagEntity
 import org.jqt3of5.android.dicebag.room.DiceEntity
 import org.jqt3of5.android.dicebag.room.DiceRollEntity
 
-class DiceRoll(@Embedded
-               val rollEntity : DiceRollEntity,
-               @Relation(entity = DiceEntity::class, parentColumn = "rollId", entityColumn = "id")
-               val diceEntities : List<DiceEntity>,
-               val subrolls : List<DiceRoll>)
+class DiceRoll
 {
+    @Embedded
+    lateinit var rollEntity : DiceRollEntity
+
+    @Relation(entity = DiceEntity::class, parentColumn = "id", entityColumn = "rollId")
+    lateinit var diceEntities : List<DiceEntity>
+
+    //@Relation(entity = DiceRollEntity::class, parentColumn = "id", entityColumn = "parentId")
+    //lateinit var subrolls : List<DiceRoll>
+
+    @Ignore
     var rollValue : Int? = null
 
     fun roll()
@@ -25,16 +33,16 @@ class DiceRoll(@Embedded
             rollValue = rollValue?.plus(dice.rollValue!! + dice.modifier)
         }
 
-        for(r in subrolls)
+        /*for(r in subrolls)
         {
             r.roll()
-        }
+        }*/
     }
 
     class DiceRollDiff(val oldList: List<DiceRoll>, val newList: List<DiceRoll>) : DiffUtil.Callback() {
 
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return oldList[oldItemPosition].id == newList[newItemPosition].id
+            return oldList[oldItemPosition].rollEntity.id == newList[newItemPosition].rollEntity.id
         }
 
         override fun getOldListSize(): Int = oldList.size
@@ -45,8 +53,8 @@ class DiceRoll(@Embedded
             val old = oldList[oldItemPosition]
             val new = newList[newItemPosition]
 
-            same = same && old.modifier == new.modifier
-            same = same && old.name == new.name
+            same = same && old.rollEntity.modifier == new.rollEntity.modifier
+            same = same && old.rollEntity.name == new.rollEntity.name
 
             val diff = DiffUtil.calculateDiff(DiceEntityDiff(old.diceEntities, new.diceEntities))
             diff.dispatchUpdatesTo(object: ListUpdateCallback {

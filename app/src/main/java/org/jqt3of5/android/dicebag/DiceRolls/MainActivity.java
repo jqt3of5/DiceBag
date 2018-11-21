@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         viewModel = ViewModelProviders.of(this).get(DiceBagViewModel.class);
+
+
         if (savedInstanceState != null)
         {
             viewModel.setMBagId(savedInstanceState.getLong(BAG_ID_KEY));
@@ -59,6 +61,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        viewModel.getDiceRollValues().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(@Nullable Integer integer) {
+                diceAdapter.notifyDataSetChanged();
+            }
+        });
+
         mMainDiceGrid = findViewById(R.id.main_dice_grid);
         mMainDiceGrid.setAdapter(diceAdapter);
         mMainDiceGrid.setLongClickable(true);
@@ -66,45 +75,44 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //Roll dice
-                ((DiceRoll)diceAdapter.getItem(i)).roll();
-                mMainDiceGrid.invalidateViews();
+                viewModel.roll(i);
             }
         });
         mMainDiceGrid.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(MainActivity.this, DicePropertiesActivity.class);
-                intent.putExtra(DicePropertiesActivity.ROLL_ID_KEY, ((DiceRoll)diceAdapter.getItem(i)).getId());
+                intent.putExtra(DicePropertiesActivity.ROLL_ID_KEY, ((DiceRoll)diceAdapter.getItem(i)).getRollEntity().getId());
                 startActivity(intent);
                 return false;
             }
         });
-
 
         final FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                //Temp code to test things
-                DiceRollEntity drEntity = new DiceRollEntity("Test", 2);
-                drEntity.setBagid(viewModel.getMBagId());
-
-                DiceEntity dice = new DiceEntity("Dice 1", 1, 8, 1);
-                DiceEntity dice1 = new DiceEntity("Dice 2", 1, 6, 1);
-                DiceEntity dice2 = new DiceEntity("Dice 3", 6, 12, 1);
-                final DiceRoll roll = new DiceRoll(drEntity, Arrays.asList(dice, dice1, dice2), new ArrayList<DiceRoll>());
-
                 new AsyncTask<Void, Void, String>() {
 
                     @Override
                     protected String doInBackground(Void... voids) {
+                        viewModel.getDiceRollRepository().addDiceBag("testbag");
+
+                        //TODO: Temp code to test things
+                        DiceRollEntity drEntity = new DiceRollEntity("Test", 2);
+                        drEntity.setBagid(viewModel.getMBagId());
+
+                        DiceEntity dice = new DiceEntity("Dice 1", 1, 8, 1);
+                        DiceEntity dice1 = new DiceEntity("Dice 2", 1, 6, 1);
+                        DiceEntity dice2 = new DiceEntity("Dice 3", 6, 12, 1);
+                        final DiceRoll roll = new DiceRoll();
+                        roll.rollEntity = drEntity;
+                        roll.diceEntities = Arrays.asList(dice, dice1, dice2);
                         viewModel.getDiceRollRepository().addDiceRoll(roll);
                         return null;
                     }
                 }.execute();
-
-                mMainDiceGrid.invalidateViews();
             }
         });
     }

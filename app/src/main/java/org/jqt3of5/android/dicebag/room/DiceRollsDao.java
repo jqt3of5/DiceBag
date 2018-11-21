@@ -6,7 +6,10 @@ import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Transaction;
 import android.arch.persistence.room.Update;
+
+import org.jqt3of5.android.dicebag.repository.DiceRoll;
 
 import java.util.List;
 
@@ -19,21 +22,13 @@ public interface DiceRollsDao
     @Query("SELECT * FROM dicebag")
     LiveData<List<DiceBagEntity>> getDiceBags();
 
-    @Query("SELECT * FROM dice WHERE rollId = :rollId")
-    List<DiceEntity> getDiceForRoll(Long rollId);
+    @Transaction
+    @Query("SELECT * FROM diceroll  WHERE bagid = :bagId")
+    LiveData<List<DiceRoll>> getRollsForBag(Long bagId);
 
-    @Query("SELECT * from diceroll WHERE parentId = :rollId")
-    List<DiceRollEntity> getSubRollForRoll(Long rollId);
-
-    @Query("SELECT * from diceroll WHERE id = :rollId")
-    LiveData<DiceRollEntity> getRollForId(Long rollId);
-
-    @Query("SELECT * FROM diceroll WHERE bagid = :bagId")
-    LiveData<List<DiceRollEntity>> getRollsForBag(Long bagId);
-
-    @Query("SELECT * FROM dice WHERE bagId = :bagId")
-    LiveData<List<DiceEntity>> getDiceForBag(Long bagId);
-
+    @Transaction
+    @Query("SELECT * from diceroll  WHERE diceroll.id = :rollId")
+    LiveData<DiceRoll> getRollForId(Long rollId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insert(DiceEntity dice);

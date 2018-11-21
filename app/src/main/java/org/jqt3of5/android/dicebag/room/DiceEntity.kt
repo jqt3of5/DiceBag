@@ -13,9 +13,6 @@ class DiceEntity(var name :String, var modifier : Int,var max : Int,var min : In
     @ForeignKey(entity = DiceRollEntity::class, parentColumns = arrayOf("id"), childColumns = arrayOf("rollId"))
     var rollId : Long = 0
 
-    @ForeignKey(entity = DiceBagEntity::class, parentColumns = arrayOf("id"), childColumns = arrayOf("bagId"))
-    var bagId : Long = 0
-
     @Ignore
     var rollValue : Int? = null
 

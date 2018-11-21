@@ -10,62 +10,75 @@ import org.jqt3of5.android.dicebag.repository.DiceRollRepository
  */
 
 class DiceBagViewModel : AndroidViewModel {
+
     var mBagId: Long = 0
     var diceRollRepository: DiceRollRepository
-    private var diceRolls: List<DiceRoll>? = null
+
+    private  var diceRollLiveData : MutableLiveData<List<DiceRoll>>
+    private var diceRolls : List<DiceRoll>? = null
+    private var diceRollValueLiveData : MutableLiveData<Int>
 
     constructor(application: Application) : super(application) {
         diceRollRepository = DiceRollRepository(application.applicationContext)
+        diceRollLiveData = MutableLiveData()
+        diceRollValueLiveData = MutableLiveData()
+    }
+
+    fun updateDiceRoll(roll : DiceRoll)
+    {
+        diceRollRepository.updateDiceRoll(roll)
+    }
+
+    fun deleteDiceRoll(roll: DiceRoll)
+    {
+        diceRollRepository.deleteDiceRoll(roll)
+    }
+
+    fun addDiceRoll(roll : DiceRoll)
+    {
+        diceRollRepository.deleteDiceRoll(roll)
     }
 
     fun getDiceRolls(): LiveData<List<DiceRoll>> {
-        val liveData = MutableLiveData<List<DiceRoll>>()
 
-        if (diceRolls != null)
-        {
-            liveData.postValue(diceRolls)
-        }
+        var liveData = diceRollRepository.getDiceRolls(mBagId)
+        return Transformations.switchMap(liveData) {
+            diceRolls?.let { oldRolls ->
 
-        Transformations.switchMap(diceRollRepository.getDiceRolls(mBagId)) {
-            if (diceRolls != null) {
-                copyRollValues(diceRolls!!, it)
+                for(newRoll in it)
+                {
+                    oldRolls.find { newRoll.rollEntity.id == it.rollEntity.id }?.let {
+                        newRoll.rollValue = it.rollValue
+
+                        for (newDice in newRoll.diceEntities)
+                        {
+                            it.diceEntities.find { newDice.id == it.id }?.let {
+
+                                newDice.rollValue = it.rollValue
+                            }
+                        }
+                    }
+                }
             }
 
             diceRolls = it
+            diceRollLiveData.postValue(diceRolls)
 
-            liveData.postValue(it)
-
-            liveData
+            diceRollLiveData
         }
-
-        return liveData
     }
 
-    private fun copyRollValues(oldRolls : List<DiceRoll>, newRolls : List<DiceRoll>)
+    fun getDiceRollValues() : LiveData<Int>
     {
-        //For each diceroll, we want to copy over the old value if it exists in the current viewmodel list
-        newRolls.forEach {newRoll ->
-            oldRolls?.find {oldRoll ->
-                newRoll.id == oldRoll.id
-            }?.let {oldRoll ->
-                //Copy Value
-                newRoll.rollValue = oldRoll.rollValue
-
-                //Copy Dice
-                newRoll.diceEntities.forEach { newDice ->
-                    oldRoll.diceEntities.find { oldDice ->
-                        oldDice.id == newDice.id
-                    }?.let { oldDice ->
-                        //Copy Dice Value
-                        newDice.rollValue = oldDice.rollValue
-                    }
-                }
-
-                //Copy subrolls
-                copyRollValues(oldRoll.subrolls, newRoll.subrolls)
-            }
-        }
+        return diceRollValueLiveData
     }
 
+    fun roll(i : Int)
+    {
+        diceRolls?.let {
+            it[i].roll()
 
+            diceRollValueLiveData.postValue(i)
+        }
+    }
 }

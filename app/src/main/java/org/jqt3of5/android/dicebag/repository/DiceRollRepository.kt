@@ -10,7 +10,7 @@ import org.jqt3of5.android.dicebag.room.DiceBagEntity
 import org.jqt3of5.android.dicebag.room.DiceDatabase
 import org.jqt3of5.android.dicebag.room.DiceRollEntity
 
-class DiceRollRepository {
+class DiceRollRepository  {
 
     private val database : DiceDatabase
 
@@ -18,6 +18,7 @@ class DiceRollRepository {
     {
         database = DiceDatabase.getInstance(context)
     }
+
     @Transaction
     fun addDiceBag(bagname : String)
     {
@@ -31,15 +32,14 @@ class DiceRollRepository {
 
         roll.rollEntity.id = database.diceRolls().insert(roll.rollEntity)
         for (dice in roll.diceEntities) {
-            dice.bagId = roll.rollEntity.bagid
             dice.rollId = roll.rollEntity.id
             dice.id = database.diceRolls().insert(dice)
         }
 
-        for (subroll in roll.subrolls)
+       /* for (subroll in roll.subrolls)
         {
             addDiceRoll(subroll)
-        }
+        }*/
     }
 
     @Transaction
@@ -52,59 +52,37 @@ class DiceRollRepository {
             database.diceRolls().insert(dice)
         }
 
-        for (subroll in roll.subrolls)
+        /*for (subroll in roll.subrolls)
         {
             updateDiceRoll(subroll)
-        }
+        }*/
     }
 
-    fun getDiceRoll (rollId : Long) : LiveData<DiceRoll>
+
+    @Transaction
+    fun deleteDiceRoll(roll: DiceRoll)
     {
-        val rollLiveData = database.diceRolls().getRollForId(rollId)
-        val liveData = MutableLiveData<DiceRoll>()
-
-        return Transformations.switchMap(rollLiveData) {
-
-            GlobalScope.launch {
-                liveData.postValue(createDiceRoll(it))
-            }
-            liveData
+        for (dice in roll.diceEntities)
+        {
+            database.diceRolls().delete(dice)
         }
+
+        database.diceRolls().delete(roll.rollEntity)
+        /*for (subroll in roll.subrolls)
+        {
+            updateDiceRoll(subroll)
+        }*/
     }
+
+
 
     fun getDiceRolls(bagId : Long) : LiveData<List<DiceRoll>>
     {
-        val rollsLiveData = database.diceRolls().getRollsForBag(bagId)
-        val liveData = MutableLiveData<List<DiceRoll>>()
-
-        return Transformations.switchMap(rollsLiveData) {
-
-            GlobalScope.launch {
-                liveData.postValue(createDiceRollsForEntities(it))
-            }
-            liveData
-        }
+        return database.diceRolls().getRollsForBag(bagId)
     }
 
-    private suspend fun createDiceRollsForEntities(entities : List<DiceRollEntity>) : List<DiceRoll>
+    fun getDiceBags() : LiveData<List<DiceBagEntity>>
     {
-        return GlobalScope.async {
-            val list = mutableListOf<DiceRoll>()
-            for (entity in  entities)
-            {
-                list.add(createDiceRoll(entity))
-            }
-            list
-        }.await()
-    }
-
-    private fun createDiceRoll(entity : DiceRollEntity) : DiceRoll
-    {
-        val dice = database.diceRolls().getDiceForRoll(entity.id)
-        val subrolls = database.diceRolls().getSubRollForRoll(entity.id).map {
-            createDiceRoll(it)
-        }
-
-        return DiceRoll(entity, dice, subrolls)
+        return database.diceRolls().diceBags
     }
 }

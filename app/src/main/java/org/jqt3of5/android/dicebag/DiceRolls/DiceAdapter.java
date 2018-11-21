@@ -38,6 +38,7 @@ public class DiceAdapter extends BaseAdapter {
         mDiceRolls.clear();
         mDiceRolls.addAll(diceRolls);
         notifyDataSetChanged();
+
     }
 
     @Override
@@ -52,7 +53,7 @@ public class DiceAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int i) {
-        return mDiceRolls.get(i).getId();
+        return mDiceRolls.get(i).rollEntity.getId();
     }
 
     @Override
@@ -71,15 +72,15 @@ public class DiceAdapter extends BaseAdapter {
 
         DiceRoll diceRoll = mDiceRolls.get(i);
 
-        if (!diceRoll.getName().isEmpty())
+        if (!diceRoll.rollEntity.getName().isEmpty())
         {
             rollTitle.setVisibility(View.VISIBLE);
-            rollTitle.setText(diceRoll.getName());
+            rollTitle.setText(diceRoll.rollEntity.getName());
         }
 
         if (diceRoll.getRollValue() != null)
         {
-            int total = diceRoll.getRollValue() + diceRoll.getModifier();
+            int total = diceRoll.getRollValue() + diceRoll.rollEntity.getModifier();
             rollTotal.setText("" + total);
             rollCalc.setText("" + diceRoll.getRollValue());
             rollmodifier.setText(" +" + diceRoll.getRollEntity().getModifier());
@@ -90,13 +91,13 @@ public class DiceAdapter extends BaseAdapter {
             rollCalc.setText("?");
         }
 
-        if (diceRoll.getModifier() >= 0)
+        if (diceRoll.rollEntity.getModifier() >= 0)
         {
-            rollmodifier.setText("+" + diceRoll.getModifier());
+            rollmodifier.setText("+" + diceRoll.rollEntity.getModifier());
         }
         else
         {
-            rollmodifier.setText(diceRoll.getModifier());
+            rollmodifier.setText(diceRoll.rollEntity.getModifier());
         }
 
 

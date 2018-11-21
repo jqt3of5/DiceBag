@@ -12,19 +12,13 @@ import org.jqt3of5.android.dicebag.repository.DiceRollRepository
 class DiceViewModel : AndroidViewModel {
     var mRollId: Long = 0
     var diceRollRepository: DiceRollRepository
-    var diceRoll: LiveData<DiceRoll>? = null
+    var diceRolls: LiveData<List<DiceRoll>>? = null
 
     constructor(application: Application) : super(application) {
         diceRollRepository = DiceRollRepository(application.applicationContext)
     }
 
-    fun getDiceRoll(rollId : Long): LiveData<DiceRoll> {
 
-        if (diceRoll == null)
-        {
-            diceRoll = diceRollRepository.getDiceRoll(rollId)
-        }
 
-        return diceRoll!!
-    }
+
 }
