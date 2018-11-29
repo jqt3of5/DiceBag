@@ -1,5 +1,7 @@
 package org.jqt3of5.android.dicebag.DiceRolls;
 
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -12,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
@@ -27,10 +30,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static String BAG_ID_KEY = "BagIdKey";
-
-
     DiceBagViewModel viewModel;
-    GridView mMainDiceGrid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
 
         viewModel = ViewModelProviders.of(this).get(DiceBagViewModel.class);
 
-
         if (savedInstanceState != null)
         {
             viewModel.setMBagId(savedInstanceState.getLong(BAG_ID_KEY));
@@ -51,41 +50,9 @@ public class MainActivity extends AppCompatActivity {
             viewModel.setMBagId(getIntent().getLongExtra(BAG_ID_KEY, 1));
         }
 
-        final DiceAdapter diceAdapter = new DiceAdapter(this);
-
-        viewModel.getDiceRolls().observe(this, new Observer<List<DiceRoll>>() {
-            @Override
-            public void onChanged(@Nullable List<DiceRoll> diceRolls) {
-                diceAdapter.setDiceRolls(diceRolls);
-            }
-        });
-
-        viewModel.getDiceRollValues().observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(@Nullable Integer integer) {
-                diceAdapter.notifyDataSetChanged();
-            }
-        });
-
-        mMainDiceGrid = findViewById(R.id.main_dice_grid);
-        mMainDiceGrid.setAdapter(diceAdapter);
-        mMainDiceGrid.setLongClickable(true);
-        mMainDiceGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //Roll dice
-                viewModel.roll(i);
-            }
-        });
-        mMainDiceGrid.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(MainActivity.this, DicePropertiesFragment.class);
-                intent.putExtra(DicePropertiesFragment.ROLL_ID_KEY, ((DiceRoll)diceAdapter.getItem(i)).getRollEntity().getId());
-                startActivity(intent);
-                return false;
-            }
-        });
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.fragment_container, new DiceListFragment());
+        transaction.commit();
 
         final FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

@@ -7,15 +7,6 @@
     tools:context="org.jqt3of5.android.dicebag.DiceRolls.MainActivity"
     tools:showIn="@layout/activity_main"
     android:padding="10dp"
+    android:id="@+id/fragment_container"
     >
-
-    <GridView android:id="@+id/main_dice_grid"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        android:verticalSpacing="10dp"
-        android:horizontalSpacing="10dp"
-        android:gravity="center"
-        android:stretchMode="columnWidth"
-        android:numColumns="3"/>
-
 </FrameLayout>
