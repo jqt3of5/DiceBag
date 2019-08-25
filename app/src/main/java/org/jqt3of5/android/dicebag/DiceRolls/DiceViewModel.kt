@@ -2,6 +2,8 @@ package org.jqt3of5.android.dicebag.DiceRolls
 
 import android.app.Application
 import android.arch.lifecycle.*
+import kotlinx.coroutines.experimental.GlobalScope
+import kotlinx.coroutines.experimental.launch
 import org.jqt3of5.android.dicebag.repository.DiceRoll
 import org.jqt3of5.android.dicebag.repository.DiceRollRepository
 
@@ -26,7 +28,10 @@ class DiceBagViewModel : AndroidViewModel {
 
     fun updateDiceRoll(roll : DiceRoll)
     {
-        diceRollRepository.updateDiceRoll(roll)
+        GlobalScope.launch {
+            diceRollRepository.updateDiceRoll(roll)
+        }
+
     }
 
     fun deleteDiceRoll(roll: DiceRoll)

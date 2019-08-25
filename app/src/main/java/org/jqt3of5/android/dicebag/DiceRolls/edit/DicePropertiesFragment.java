@@ -125,7 +125,7 @@ public class DicePropertiesFragment extends DialogFragment {
     {
         _roll.rollEntity.setName(_rollNameEditText.getText().toString());
         //This string.replace stuff is bad
-        int modifier = Integer.parseInt(_rollNameEditText.getText().toString().replace("+", ""));
+        int modifier = Integer.parseInt(_rollModifierEditText.getText().toString().replace("+", ""));
         _roll.rollEntity.setModifier(modifier);
 
         for (DiceEditRow row :
